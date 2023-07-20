@@ -1,7 +1,9 @@
 package med.voll.api.controller;
 
 import jakarta.validation.Valid;
-import med.voll.api.medico.*;
+import med.voll.api.domain.medico.Medico;
+import med.voll.api.domain.medico.MedicoRepository;
+import med.voll.api.domain.medico.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/medicos")
@@ -24,7 +25,7 @@ public class MedicoController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroMedico dados, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<DadosDetalhamentoMedico> cadastrar(@RequestBody @Valid DadosCadastroMedico dados, UriComponentsBuilder uriBuilder) {
         Medico medico = new Medico(dados);
         repository.save(medico);
 
@@ -38,8 +39,6 @@ public class MedicoController {
         Page<DadosListagemMedico> page = repository.findAllByAtivoTrue(paginacao).map(DadosListagemMedico::new);
         return ResponseEntity.ok(page);
     }
-
-
 
     @PutMapping
     @Transactional
